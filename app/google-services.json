@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "582281958819",
+    "firebase_url": "https://rebenokumnyi-default-rtdb.firebaseio.com",
+    "project_id": "rebenokumnyi",
+    "storage_bucket": "rebenokumnyi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582281958819:android:2536dac599362c337b7616",
+        "android_client_info": {
+          "package_name": "com.example.rebenokumnyi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "582281958819-hbegqppcpvmlajviasj2dfubf5teqgu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rebenokumnyi",
+            "certificate_hash": "3d2a83bc6f68b011b5f7857258b62523d0398664"
+          }
+        },
+        {
+          "client_id": "582281958819-jhgje8d2ah5916rk9jfl9imgermn34v4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCtj2k8lshBHHvkIGJKdfLIDHFqpNOJH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "582281958819-jhgje8d2ah5916rk9jfl9imgermn34v4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
