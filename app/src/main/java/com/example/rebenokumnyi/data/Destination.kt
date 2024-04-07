@@ -80,6 +80,12 @@ object TeacherChat : URDestination {
     @StringRes override val title= R.string.teacher_chat
 }
 
+object AdminStudent : URDestination {
+    @DrawableRes override val icon = R.drawable.parents
+    override val route = "adminstudent/{userId}"
+    @StringRes override val title= R.string.admin_student
+}
+
 val parentTabRowScreens = listOf(AuthPage,ParentSchedule, ParentChat, ParentJournal, ParentPaydata, AboutPage)
 val notAuthTabRowScreens = listOf(AuthPage,AboutPage)
 val adminTabRowScreens = listOf(AuthPage,AdminGroup,AdminTeacher,AboutPage)

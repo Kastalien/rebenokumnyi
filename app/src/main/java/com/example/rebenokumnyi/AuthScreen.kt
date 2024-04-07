@@ -38,7 +38,7 @@ fun AuthScreen(
     Column(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxHeight(0.4F),
+            .fillMaxHeight(0.7F),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -73,17 +73,7 @@ fun AuthScreen(
                     text = stringResource(R.string.awayt_registration)
                 )
             }
-            if (currentRoleScreen == Roles.PARENTUSER) {
-                Text(
-                    style = appTypography.labelMedium,
-                    textAlign = TextAlign.Center,
-                    text = stringResource(R.string.child_in_group)
-                )
-                Text(
-                    text = currentRole.getGroup()?.name ?: currentRole.getGroup().toString(),
-                    color = md_theme_light_surfaceTint
-                )
-            } else if (currentRoleScreen == Roles.UNKNOWN) {
+             if (currentRoleScreen == Roles.UNKNOWN) {
                 Spacer(Modifier.height(10.dp))
                 Button(onClick = {
                     onChangeAccount { currentRoleScreen = currentRole.role }

@@ -4,9 +4,6 @@ import com.google.firebase.database.getValue
 
 fun loadRole(onEndLoading: () -> Unit) {
     if (AppData.isAuth()) {
-        if (isLocalData)
-            currentRole = UserRole("EieaSdVnbFhrJxIaTr6GkrFoZRZ2", Roles.ADMIN, 1, "Павел Петрович")
-        else {
             AppData.database.child("roles").child(AppData.getUserID()).get()
                 .addOnSuccessListener {
                     currentRole = it.getValue<UserRole>() ?: UserRole()
@@ -20,7 +17,6 @@ fun loadRole(onEndLoading: () -> Unit) {
                     currentRole = EmptyRole
                     onEndLoading()
                 }
-        }
     } else
         onEndLoading()
 }
@@ -51,6 +47,17 @@ fun loadSchedule(groupId:Int,onEndLoading: () -> Unit) {
         }
 }
 
+fun loadSubjects(onEndLoading: () -> Unit) {
+    AppData.database.child("subjects").get()
+        .addOnSuccessListener { snapshot ->
+            subjects = snapshot.getValue<Map<String, Subject>>()?.map { it.value }?.toList() ?: listOf()
+            onEndLoading()
+        }.addOnFailureListener {
+            subjects = mutableListOf<Subject>()
+            onEndLoading()
+        }
+}
+
 fun loadAllRoles(onEndLoading: () -> Unit) {
     AppData.database.child("roles").get()
         .addOnSuccessListener { snapshot ->
@@ -62,6 +69,16 @@ fun loadAllRoles(onEndLoading: () -> Unit) {
         }
 }
 
+fun loadStudents(onEndLoading: () -> Unit) {
+    AppData.database.child("students").get()
+        .addOnSuccessListener { snapshot ->
+            students = snapshot.getValue<Map<String, Student>>()?.map { it.value }?.toList() ?: listOf()
+            onEndLoading()
+        }.addOnFailureListener {
+            students = mutableListOf<Student>()
+            onEndLoading()
+        }
+}
 //JUST FOR DEBUGGING AND DEVELOPMENT
 
 val debugGroups = listOf<Group>(

@@ -5,9 +5,11 @@ import com.google.firebase.database.Exclude
 
 enum class Roles(val role: Int) { UNKNOWN(0), ADMIN(1), TEACHER(2), PARENTUSER(3) }
 
-val EmptyRole = UserRole("", Roles.UNKNOWN, 0, "")
+val EmptyRole = UserRole("", Roles.UNKNOWN, "")
 var currentRole: UserRole = EmptyRole
 var groups: List<Group> = listOf()
+var subjects: List<Subject> = listOf()
+var students: List<Student> = listOf()
 var roles: List<UserRole> = listOf()
 var groupSchedule: List<Schedule> = listOf()
 var daysOfWeek = mapOf<Int, Int>(
@@ -48,24 +50,15 @@ data class Group(
 data class UserRole(
     var userId: String = "",
     var role: Roles = Roles.UNKNOWN,
-    var groupId: Int = 0,
     var name: String = ""
 ) {
-    fun getGroup(): Group? {
-        return groups.find { it.id == groupId }
-    }
 
     fun save() {
         AppData.database.child("roles").child(userId).setValue(this)
     }
 
-    fun setNewRole(newRole: Roles) {
+    fun addNewRole(newRole: Roles) {
         role = newRole
-        save()
-    }
-
-    fun setNewGroup(newGroup: Int) {
-        groupId = newGroup
         save()
     }
 
@@ -83,9 +76,53 @@ data class Schedule(
     var id: String = "",
     var groupId: Int = 0,
     var dayOfWeek: Int = 1,
-    var subject: String = "",
+    var subjectId: String = "",
     var start: String = "",
     var duration: Int = 0
+) {
+    @Exclude
+    fun getSubject(): Subject? {
+        return subjects.find { it.id == subjectId }
+    }
+
+    fun save() {
+        AppData.database.child("schedule").child(id).setValue(this)
+    }
+
+    fun addNewSchedule() {
+        AppData.database.child("schedule").push().key?.let {
+            id = it
+            save()
+        }
+    }
+    fun remove() {
+        AppData.database.child("schedule").child(id).removeValue()
+    }
+}
+
+data class Subject(
+    var id: String = "",
+    var name: String = ""
+) {
+    fun save() {
+        AppData.database.child("subjects").child(id).setValue(this)
+    }
+    fun setNewSubject(newSubjectName: String):Subject? {
+        AppData.database.child("subjects").push().key?.let {
+            id = it
+            name = newSubjectName
+            save()
+            return this
+        }
+        return null
+    }
+}
+
+data class Student(
+    var id: String = "",
+    var groupId: Int = 0,
+    var userId: String = "",
+    var name: String = ""
 ) {
     @Exclude
     fun getGroup(): Group? {
@@ -93,22 +130,25 @@ data class Schedule(
     }
 
     fun save() {
-        AppData.database.child("schedule").child(id).setValue(this)
+        AppData.database.child("students").child(id).setValue(this)
     }
 
-    fun setNewTeacher(newUserId: String) {
-        AppData.database.child("schedule").push().key?.let {
+    fun addNewStudent() {
+        AppData.database.child("students").push().key?.let {
             id = it
             save()
         }
     }
-
-    fun setNewSubjectName(newSubjectName: String) {
-        subject = newSubjectName
+    fun setNewGroup(newGroupId: Int) {
+        groupId = newGroupId
         save()
     }
-
     fun remove() {
-        AppData.database.child("schedule").child(id).removeValue()
+        AppData.database.child("students").child(id).removeValue()
+    }
+
+    fun setNewName(newName: String) {
+        name = newName
+        save()
     }
 }

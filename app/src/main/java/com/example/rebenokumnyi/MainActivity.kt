@@ -24,16 +24,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.compose.RebenokumnyiTheme
 import com.example.rebenokumnyi.adminscreens.AdminGroupScreen
+import com.example.rebenokumnyi.adminscreens.AdminStudentScreen
 import com.example.rebenokumnyi.adminscreens.AdminTeacherScreen
 import com.example.rebenokumnyi.components.URTabRow
 import com.example.rebenokumnyi.data.AboutPage
 import com.example.rebenokumnyi.data.AdminGroup
+import com.example.rebenokumnyi.data.AdminStudent
 import com.example.rebenokumnyi.data.AdminTeacher
 import com.example.rebenokumnyi.data.AppData
 import com.example.rebenokumnyi.data.AppData.isAuth
@@ -185,7 +189,9 @@ fun MainApp(
                     TeacherChatScreen()
                 }
                 composable(route = AdminTeacher.route) {
-                    AdminTeacherScreen()
+                    AdminTeacherScreen(){
+                        navController.navigateWithStringParameter("adminstudent", it)
+                    }
                 }
                 composable(route = AdminGroup.route) {
                     AdminGroupScreen()
@@ -207,26 +213,23 @@ fun MainApp(
                 }
                 composable(route = AboutPage.route) {
                     AboutScreen()
-                }/*
-                TODO remove
-                composable(
-                    route = SingleAccount.routeWithArgs,
-                    arguments =  SingleAccount.arguments,
-                    deepLinks = SingleAccount.deepLinks
-                ) {navBackStackEntry ->
-                    val accountType =
-                        navBackStackEntry.arguments?.getString(SingleAccount.accountTypeArg)
-                    SingleAccountScreen(accountType)
                 }
-                 */
+                composable(
+                    route = AdminStudent.route,
+                    arguments =  listOf(navArgument("userId") { type = NavType.StringType })
+                ) {navBackStackEntry ->
+                    val parentId =
+                        navBackStackEntry.arguments?.getString("userId")
+                    AdminStudentScreen(parentId?:""){
+                        navController.navigateSingleTopTo("adminteacher")
+                    }
+                }
             }
         }
     }
 }
 
-//TODO remove if noneed
-@Suppress("unused")
-private fun NavHostController.navigateWithStringParameter(route: String, param: String) {
+fun NavHostController.navigateWithStringParameter(route: String, param: String) {
     this.navigateSingleTopTo("${route}/$param")
 }
 

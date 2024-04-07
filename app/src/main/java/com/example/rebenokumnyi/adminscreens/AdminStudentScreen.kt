@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,19 +35,24 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rebenokumnyi.R
-import com.example.rebenokumnyi.viewmodels.GroupViewModel
+import com.example.rebenokumnyi.components.URButton
 import com.example.rebenokumnyi.components.URListButton
+import com.example.rebenokumnyi.components.UROutlineTextField
+import com.example.rebenokumnyi.components.URSelectGroup
 import com.example.rebenokumnyi.components.URSelectTeacher
 import com.example.rebenokumnyi.data.Group
 import com.example.rebenokumnyi.data.Roles
+import com.example.rebenokumnyi.data.Student
 import com.example.rebenokumnyi.data.groups
 import com.example.rebenokumnyi.data.roles
 import com.example.rebenokumnyi.ui.theme.appTypography
 import com.example.rebenokumnyi.ui.theme.md_theme_light_secondaryContainer
+import com.example.rebenokumnyi.viewmodels.GroupViewModel
+import com.example.rebenokumnyi.viewmodels.UsersViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminGroupScreen(GroupViewModel: GroupViewModel = viewModel()) {
+fun AdminStudentScreen(parentId: String, UsersViewModel: UsersViewModel = viewModel(), onBack:()->Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -60,62 +64,63 @@ fun AdminGroupScreen(GroupViewModel: GroupViewModel = viewModel()) {
                 .padding(5.dp)
                 .weight(1F)
         ) {
-            GroupList(
-                GroupViewModel.visibleGroups,
-                GroupViewModel.isLoading
-            ) { GroupViewModel.getGroups() }
+            StudentList(
+                UsersViewModel.getStudentsByUser(parentId), UsersViewModel.isLoading
+            ) { UsersViewModel.loadUsers() }
         }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp)
-                .height(130.dp)
         ) {
             Column(
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.SpaceEvenly
+                horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                var newGroupName by remember { mutableStateOf("") }
-                Button(
-                    onClick = {
-                        val newGroup=Group(groups.count()+1,newGroupName)
-                        newGroup.save()
-                        GroupViewModel.getGroups()
-                    },
+                var newStudentName by remember { mutableStateOf("") }
+                URButton(
+                    text = stringResource(R.string.add_students),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(40.dp)
+                        .height(30.dp)
                 ) {
-                    Text(stringResource(R.string.add_group))
+                    if (newStudentName!="") {
+                        UsersViewModel.addStudent(newStudentName, parentId)
+                        UsersViewModel.loadUsers()
+                        newStudentName = ""
+                    }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                OutlinedTextField(
-                    value = newGroupName,
-                    onValueChange = { newGroupName = it },
-                    label = { Text(stringResource(R.string.enter_new_group_name)) },
-                    colors=TextFieldDefaults.textFieldColors(containerColor = md_theme_light_secondaryContainer),
+                UROutlineTextField(
+                    placeholder = stringResource(R.string.enter_new_group_name),
+                    value = newStudentName,
+                    onValueChange ={ newStudentName = it })
+                Spacer(modifier = Modifier.height(10.dp))
+                URButton(
+                    text = stringResource(R.string.back),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(80.dp)
-                )
+                        .height(30.dp)
+                ) {
+                    onBack()
+                }
             }
         }
     }
     DisposableEffect(Unit) {
-        GroupViewModel.getGroups()
+        UsersViewModel.loadUsers()
         onDispose {}
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun GroupList(visibleGroups: MutableList<Group>, isLoading: Boolean, onUpdate: () -> Unit) {
-    var isSelectTeacher by remember { mutableStateOf(false) }
-    var groupTarget by remember { mutableStateOf(Group()) }
-    if (isSelectTeacher) {
-        URSelectTeacher(roles.filter { it.role == Roles.TEACHER }) {
-            groupTarget.setNewTeacher(it)
-            isSelectTeacher = false
+fun StudentList(students: List<Student>, isLoading: Boolean, onUpdate: () -> Unit) {
+    var isSelectGroup by remember { mutableStateOf(false) }
+    var studentTarget by remember { mutableStateOf(Student()) }
+    if (isSelectGroup) {
+        URSelectGroup(groups) {
+            studentTarget.setNewGroup(it.id)
+            isSelectGroup = false
             onUpdate()
         }
     } else {
@@ -131,9 +136,9 @@ fun GroupList(visibleGroups: MutableList<Group>, isLoading: Boolean, onUpdate: (
                 }
             } else {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    itemsIndexed(visibleGroups) { index, group ->
+                    itemsIndexed(students) { index, student ->
                         var edit by remember { mutableStateOf(false) }
-                        var groupName by remember { mutableStateOf(group.name) }
+                        var studentName by remember { mutableStateOf(student.name) }
                         Row(
                             modifier = Modifier
                                 .height(if (edit) 70.dp else 45.dp)
@@ -155,35 +160,38 @@ fun GroupList(visibleGroups: MutableList<Group>, isLoading: Boolean, onUpdate: (
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 if (edit) {
-                                    OutlinedTextField(
-                                        value = groupName,
-                                        onValueChange = { groupName = it },
-                                        label = { Text(stringResource(R.string.enter_new_group_name)) },
-                                        modifier = Modifier.fillMaxSize()
+                                    UROutlineTextField(
+                                        value = studentName,
+                                        onValueChange = { studentName = it },
+                                        placeholder = stringResource(R.string.enter_correct_fio),
                                     )
                                 } else {
-                                    Text(text = "${group.name}", style = appTypography.bodyMedium)
+                                    Text(text = "${student.name}", style = appTypography.bodyMedium)
                                     Text(
-                                        text = group.getTeacher()?.name ?: stringResource(R.string.teacher_not_selected),
+                                        text = student.getGroup()?.name
+                                            ?: stringResource(R.string.group_not_selected),
                                         style = appTypography.displaySmall
                                     )
                                 }
                             }
                             if (edit) {
                                 URListButton(icon = ImageVector.vectorResource(R.drawable.save)) {
-                                    group.setNewName(groupName)
+                                    student.setNewName(studentName)
                                     edit = false
                                     onUpdate()
                                 }
-                            }
-                            else {
-                                URListButton(icon = ImageVector.vectorResource(R.drawable.teacher)) {
-                                    isSelectTeacher = true
-                                    groupTarget = group
+                            } else {
+                                URListButton(icon = ImageVector.vectorResource(R.drawable.group)) {
+                                    isSelectGroup = true
+                                    studentTarget = student
                                     onUpdate()
                                 }
                                 URListButton(icon = ImageVector.vectorResource(R.drawable.edit)) {
                                     edit = true
+                                }
+                                URListButton(icon = ImageVector.vectorResource(R.drawable.delete)) {
+                                    student.remove()
+                                    onUpdate()
                                 }
                             }
                         }

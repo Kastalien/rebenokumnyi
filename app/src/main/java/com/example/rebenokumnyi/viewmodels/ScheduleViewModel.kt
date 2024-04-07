@@ -9,10 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rebenokumnyi.data.Group
 import com.example.rebenokumnyi.data.Schedule
+import com.example.rebenokumnyi.data.Subject
 import com.example.rebenokumnyi.data.currentRole
 import com.example.rebenokumnyi.data.groupSchedule
 import com.example.rebenokumnyi.data.groups
 import com.example.rebenokumnyi.data.loadSchedule
+import com.example.rebenokumnyi.data.loadSubjects
 import kotlinx.coroutines.launch
 
 class ScheduleViewModel : ViewModel() {
@@ -25,7 +27,7 @@ class ScheduleViewModel : ViewModel() {
 
     fun getSchedule() {
         visibleSchedule.clear()
-        visibleSchedule.addAll(groupSchedule.filter { it.dayOfWeek == dayOfWeek })
+        visibleSchedule.addAll(groupSchedule.filter { it.dayOfWeek == dayOfWeek }.sortedBy { it.start })
     }
 
     fun loadSchedule() {
@@ -34,11 +36,22 @@ class ScheduleViewModel : ViewModel() {
             return
         }
         isLoading = true
+        var isScheduleLoading=true
+        var isSubjectLoading=true
         visibleSchedule.clear()
         viewModelScope.launch {
             loadSchedule(selectedGroup.id) {
-                visibleSchedule.addAll(groupSchedule.filter { it.dayOfWeek == dayOfWeek })
-                isLoading = false
+                visibleSchedule.addAll(groupSchedule.filter { it.dayOfWeek == dayOfWeek }.sortedBy { it.start })
+                isScheduleLoading=false
+                if (!isSubjectLoading)
+                    isLoading = false
+            }
+        }
+        viewModelScope.launch {
+            loadSubjects {
+                isSubjectLoading=false
+                if (!isScheduleLoading)
+                    isLoading = false
             }
         }
     }
@@ -52,5 +65,19 @@ class ScheduleViewModel : ViewModel() {
         if (dayOfWeek<7)
             dayOfWeek++
         getSchedule()
+    }
+
+    fun addNewSubject(newSubject: String): Subject? {
+        return Subject().setNewSubject(newSubject)?:null
+    }
+
+    fun addNewLesson(newSubjectId: String, newScheduleTime: String, newDuration: Int) {
+        var newSchedule=Schedule()
+        newSchedule.groupId=selectedGroup.id
+        newSchedule.subjectId=newSubjectId
+        newSchedule.dayOfWeek=dayOfWeek
+        newSchedule.duration=newDuration
+        newSchedule.start=newScheduleTime
+        newSchedule.addNewSchedule()
     }
 }

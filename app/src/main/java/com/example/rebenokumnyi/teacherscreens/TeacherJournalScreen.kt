@@ -7,4 +7,6 @@ import com.example.rebenokumnyi.viewmodels.ScheduleViewModel
 
 @Composable
 fun TeacherJournalScreen(JournalViewModel: JournalViewModel = viewModel()) {
+
+
 }
