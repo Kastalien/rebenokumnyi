@@ -2,12 +2,18 @@ package com.example.rebenokumnyi
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,8 +28,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.rebenokumnyi.data.AppData
 import com.example.rebenokumnyi.data.Roles
+import com.example.rebenokumnyi.data.Student
 import com.example.rebenokumnyi.data.currentRole
-import com.example.rebenokumnyi.data.saveGroupAndRole
+import com.example.rebenokumnyi.data.students
 import com.example.rebenokumnyi.ui.theme.appTypography
 import com.example.rebenokumnyi.ui.theme.md_theme_light_surfaceTint
 import com.firebase.ui.auth.AuthUI
@@ -38,13 +45,21 @@ fun AuthScreen(
     Column(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxHeight(0.7F),
+            .fillMaxHeight(1F),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var isAuth by rememberSaveable { mutableStateOf(AppData.isAuth()) }
         var currentRoleScreen by remember { mutableStateOf(currentRole.role) }
         var userName by remember { mutableStateOf(currentRole.name) }
+        var selectedChild by remember { mutableStateOf(
+            if (AppData.currentChild.id!="")
+                AppData.currentChild
+            else if (students.any { it.userId == AppData.getUserID() })
+                students.first{ it.userId == AppData.getUserID() }
+            else
+                Student()
+        ) }
         if (isAuth) {
             Text(
                 style = appTypography.labelMedium, text = stringResource(
@@ -72,14 +87,37 @@ fun AuthScreen(
                     textAlign = TextAlign.Center,
                     text = stringResource(R.string.awayt_registration)
                 )
-            }
-             if (currentRoleScreen == Roles.UNKNOWN) {
                 Spacer(Modifier.height(10.dp))
                 Button(onClick = {
                     onChangeAccount { currentRoleScreen = currentRole.role }
                 }) { Text(text = stringResource(R.string.update_registration)) }
+            } else if (currentRoleScreen == Roles.PARENTUSER) {
+                val children = students.filter { it.userId == AppData.getUserID() }
+                LazyColumn(modifier = Modifier
+                    .fillMaxHeight(0.5F)
+                    .fillMaxWidth()) {
+                    items(children) { student ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            RadioButton(selected = (selectedChild.id == student.id), onClick = {
+                                selectedChild = student
+                                AppData.currentChild = student
+                            })
+                            Text(
+                                text = "${student.name} (${student.getGroup()?.name?: stringResource(
+                                    R.string.group_not_selected_for_student
+                                )
+                                })", style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                        Spacer(Modifier.height(3.dp))
+                    }
+                }
             }
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(4.dp))
             Button(
                 onClick = {
                     FirebaseAuth.getInstance().addAuthStateListener {
@@ -95,7 +133,8 @@ fun AuthScreen(
             ) {
                 Text("Выйти из аккаунта")
             }
-        } else {
+        }//--------------------------NOT AUTH-------------------------------------
+        else {
             Text("Вы не авторизованы!")
             Spacer(Modifier.height(40.dp))
             Button(

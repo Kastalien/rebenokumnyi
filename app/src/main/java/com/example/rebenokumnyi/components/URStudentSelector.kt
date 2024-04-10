@@ -17,11 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.rebenokumnyi.data.Group
+import com.example.rebenokumnyi.data.Student
 import com.example.rebenokumnyi.data.groups
 import com.example.rebenokumnyi.ui.theme.appTypography
 
 @Composable
-fun URSelectGroup(groups: List<Group>, onSelect: (Group) -> Unit) {
+fun URStudentSelector(students: List<Student>, onSelect: (Student) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -29,7 +30,7 @@ fun URSelectGroup(groups: List<Group>, onSelect: (Group) -> Unit) {
         border = BorderStroke(2.dp, Color.Black),
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            itemsIndexed(groups) { index, group ->
+            itemsIndexed(students) { index, student ->
                 Row(
                     modifier = Modifier
                         .height(80.dp)
@@ -37,11 +38,11 @@ fun URSelectGroup(groups: List<Group>, onSelect: (Group) -> Unit) {
                         .padding(5.dp)
                 ) {
                     Button(
-                        onClick = { onSelect(group) },
+                        onClick = { onSelect(student) },
                         modifier = Modifier.fillMaxSize(),
                         shape = RoundedCornerShape(30)
                     ) {
-                        Text(text = "${group.name}", style = appTypography.bodyMedium)
+                        Text(text = "${student.name}", style = appTypography.bodyMedium)
                     }
                 }
             }

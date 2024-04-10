@@ -11,6 +11,7 @@ var groups: List<Group> = listOf()
 var subjects: List<Subject> = listOf()
 var students: List<Student> = listOf()
 var roles: List<UserRole> = listOf()
+var selectedJournal: List<Journal> = listOf()
 var groupSchedule: List<Schedule> = listOf()
 var daysOfWeek = mapOf<Int, Int>(
     Pair(1, R.string.day_of_week_1),
@@ -85,6 +86,15 @@ data class Schedule(
         return subjects.find { it.id == subjectId }
     }
 
+    @Exclude
+    fun getNote(): String? {
+        return selectedJournal.find { it.scheduleId == id }?.note
+    }
+    @Exclude
+    fun getNoteId(): String? {
+        return selectedJournal.find { it.scheduleId == id }?.id
+    }
+
     fun save() {
         AppData.database.child("schedule").child(id).setValue(this)
     }
@@ -150,5 +160,28 @@ data class Student(
     fun setNewName(newName: String) {
         name = newName
         save()
+    }
+}
+
+data class Journal(
+    var id: String = "",
+    var date: String = "",
+    var scheduleId: String = "",
+    var studentId: String = "",
+    var note: String = ""
+) {
+
+    fun save() {
+        AppData.database.child("journal").child(id).setValue(this)
+    }
+
+    fun addNewJournal() {
+        AppData.database.child("journal").push().key?.let {
+            id = it
+            save()
+        }
+    }
+    fun remove() {
+        AppData.database.child("schedule").child(id).removeValue()
     }
 }

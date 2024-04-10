@@ -16,6 +16,7 @@ object AppData {
     private lateinit var auth: FirebaseAuth
     lateinit var context: MainActivity
     lateinit var database: DatabaseReference
+    var currentChild = Student()
     fun initAuth(mainActivity: MainActivity) {
         auth = Firebase.auth
         database = Firebase.database.reference

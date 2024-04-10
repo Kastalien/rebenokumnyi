@@ -38,7 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rebenokumnyi.R
 import com.example.rebenokumnyi.viewmodels.GroupViewModel
 import com.example.rebenokumnyi.components.URListButton
-import com.example.rebenokumnyi.components.URSelectTeacher
+import com.example.rebenokumnyi.components.URTeacherSelector
 import com.example.rebenokumnyi.data.Group
 import com.example.rebenokumnyi.data.Roles
 import com.example.rebenokumnyi.data.groups
@@ -113,7 +113,7 @@ fun GroupList(visibleGroups: MutableList<Group>, isLoading: Boolean, onUpdate: (
     var isSelectTeacher by remember { mutableStateOf(false) }
     var groupTarget by remember { mutableStateOf(Group()) }
     if (isSelectTeacher) {
-        URSelectTeacher(roles.filter { it.role == Roles.TEACHER }) {
+        URTeacherSelector(roles.filter { it.role == Roles.TEACHER }) {
             groupTarget.setNewTeacher(it)
             isSelectTeacher = false
             onUpdate()

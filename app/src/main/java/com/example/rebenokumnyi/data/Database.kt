@@ -5,14 +5,21 @@ import com.google.firebase.database.getValue
 fun loadRole(onEndLoading: () -> Unit) {
     if (AppData.isAuth()) {
             AppData.database.child("roles").child(AppData.getUserID()).get()
-                .addOnSuccessListener {
-                    currentRole = it.getValue<UserRole>() ?: UserRole()
+                .addOnSuccessListener { dataSnapshot ->
+                    currentRole = dataSnapshot.getValue<UserRole>() ?: UserRole()
                     if (currentRole.role == Roles.UNKNOWN) {
                         currentRole.userId = AppData.getUserID()
                         currentRole.name = AppData.getUserName()
                         currentRole.save()
                     }
-                    loadGroups(onEndLoading)
+                    loadGroups {
+                        loadStudents {
+                            if ((students.any { it.userId == AppData.getUserID() }) && (AppData.currentChild.id == ""))
+                                AppData.currentChild =
+                                    students.first { it.userId == AppData.getUserID() }
+                            onEndLoading()
+                        }
+                    }
                 }.addOnFailureListener {
                     currentRole = EmptyRole
                     onEndLoading()
@@ -79,6 +86,34 @@ fun loadStudents(onEndLoading: () -> Unit) {
             onEndLoading()
         }
 }
+
+fun loadStudents(groupId: Int,onEndLoading: () -> Unit) {
+    AppData.database.child("students").orderByChild("groupId").equalTo(groupId.toDouble()).get()
+        .addOnSuccessListener { snapshot ->
+            students = snapshot.getValue<Map<String, Student>>()?.map { it.value }?.toList() ?: listOf()
+            onEndLoading()
+        }.addOnFailureListener {
+            students = mutableListOf<Student>()
+            onEndLoading()
+        }
+}
+
+fun loadSelectedJournal(studentId: String, date:String, onEndLoading: () -> Unit) {
+    AppData
+        .database
+        .child("journal")
+        .orderByChild("date")
+        .equalTo(date)
+        .get()
+        .addOnSuccessListener { snapshot ->
+            selectedJournal = snapshot.getValue<Map<String, Journal>>()?.map { it.value }?.toList()?.filter { it.studentId==studentId } ?: listOf()
+            onEndLoading()
+        }.addOnFailureListener {
+            selectedJournal = mutableListOf<Journal>()
+            onEndLoading()
+        }
+}
+
 //JUST FOR DEBUGGING AND DEVELOPMENT
 
 val debugGroups = listOf<Group>(

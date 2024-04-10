@@ -17,12 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.rebenokumnyi.data.Group
-import com.example.rebenokumnyi.data.UserRole
-import com.example.rebenokumnyi.data.groups
 import com.example.rebenokumnyi.ui.theme.appTypography
 
 @Composable
-fun URSelectTeacher(teachers: List<UserRole>, onSelect: (String) -> Unit) {
+fun URGroupSelector(groups: List<Group>, onSelect: (Group) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -30,19 +28,19 @@ fun URSelectTeacher(teachers: List<UserRole>, onSelect: (String) -> Unit) {
         border = BorderStroke(2.dp, Color.Black),
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            itemsIndexed(teachers) { index, teacher ->
+            itemsIndexed(groups) { index, group ->
                 Row(
                     modifier = Modifier
-                        .height(50.dp)
+                        .height(80.dp)
                         .fillMaxWidth()
                         .padding(5.dp)
                 ) {
                     Button(
-                        onClick = { onSelect(teacher.userId) },
+                        onClick = { onSelect(group) },
                         modifier = Modifier.fillMaxSize(),
                         shape = RoundedCornerShape(30)
                     ) {
-                        Text(text = "${teacher.name}", style = appTypography.bodyMedium)
+                        Text(text = "${group.name}", style = appTypography.bodyMedium)
                     }
                 }
             }

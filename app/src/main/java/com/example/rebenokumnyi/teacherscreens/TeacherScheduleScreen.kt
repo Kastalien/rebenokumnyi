@@ -48,7 +48,7 @@ import com.example.rebenokumnyi.components.URButton
 import com.example.rebenokumnyi.components.URInputButton
 import com.example.rebenokumnyi.components.URListButton
 import com.example.rebenokumnyi.components.UROutlineTextField
-import com.example.rebenokumnyi.components.URSelectGroup
+import com.example.rebenokumnyi.components.URGroupSelector
 import com.example.rebenokumnyi.components.URSubjectSelector
 import com.example.rebenokumnyi.data.AppData
 import com.example.rebenokumnyi.data.Schedule
@@ -79,7 +79,7 @@ fun TeacherScheduleScreen(ScheduleViewModel: ScheduleViewModel = viewModel()) {
             Text(stringResource(id = R.string.nonGroupForTeacher), textAlign = TextAlign.Center)
         } else {
             if (isSelectGroup) {
-                URSelectGroup(ScheduleViewModel.teacherGroups) {
+                URGroupSelector(ScheduleViewModel.teacherGroups) {
                     ScheduleViewModel.selectedGroup = it
                     isSelectGroup = false
                     ScheduleViewModel.loadSchedule()
@@ -138,7 +138,7 @@ fun TeacherScheduleScreen(ScheduleViewModel: ScheduleViewModel = viewModel()) {
                         .weight(1F)
                 ) {
                     ScheduleList(
-                        ScheduleViewModel.visibleSchedule, ScheduleViewModel.isLoading
+                        ScheduleViewModel.visibleSchedule, ScheduleViewModel.isLoading, true
                     ) { ScheduleViewModel.loadSchedule() }
                 }
                 Column(
@@ -218,7 +218,7 @@ fun TeacherScheduleScreen(ScheduleViewModel: ScheduleViewModel = viewModel()) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleList(daySchedule: MutableList<Schedule>, isLoading: Boolean, onUpdate: () -> Unit) {
+fun ScheduleList(daySchedule: MutableList<Schedule>, isLoading: Boolean, isShowButton:Boolean, onUpdate: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxSize(),
         border = BorderStroke(2.dp, Color.Black),
@@ -265,9 +265,11 @@ fun ScheduleList(daySchedule: MutableList<Schedule>, isLoading: Boolean, onUpdat
                                 )
                             }
                         }
-                        URListButton(icon = ImageVector.vectorResource(R.drawable.delete)) {
-                            schedule.remove()
-                            onUpdate()
+                        if (isShowButton) {
+                            URListButton(icon = ImageVector.vectorResource(R.drawable.delete)) {
+                                schedule.remove()
+                                onUpdate()
+                            }
                         }
                         Spacer(modifier = Modifier.height(5.dp))
                     }

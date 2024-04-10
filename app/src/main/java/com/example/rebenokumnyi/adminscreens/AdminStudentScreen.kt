@@ -17,9 +17,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -38,16 +36,10 @@ import com.example.rebenokumnyi.R
 import com.example.rebenokumnyi.components.URButton
 import com.example.rebenokumnyi.components.URListButton
 import com.example.rebenokumnyi.components.UROutlineTextField
-import com.example.rebenokumnyi.components.URSelectGroup
-import com.example.rebenokumnyi.components.URSelectTeacher
-import com.example.rebenokumnyi.data.Group
-import com.example.rebenokumnyi.data.Roles
+import com.example.rebenokumnyi.components.URGroupSelector
 import com.example.rebenokumnyi.data.Student
 import com.example.rebenokumnyi.data.groups
-import com.example.rebenokumnyi.data.roles
 import com.example.rebenokumnyi.ui.theme.appTypography
-import com.example.rebenokumnyi.ui.theme.md_theme_light_secondaryContainer
-import com.example.rebenokumnyi.viewmodels.GroupViewModel
 import com.example.rebenokumnyi.viewmodels.UsersViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -118,7 +110,7 @@ fun StudentList(students: List<Student>, isLoading: Boolean, onUpdate: () -> Uni
     var isSelectGroup by remember { mutableStateOf(false) }
     var studentTarget by remember { mutableStateOf(Student()) }
     if (isSelectGroup) {
-        URSelectGroup(groups) {
+        URGroupSelector(groups) {
             studentTarget.setNewGroup(it.id)
             isSelectGroup = false
             onUpdate()
