@@ -54,8 +54,13 @@
     <string name="add_students">Добавить ученика</string>
     <string name="back">Вернуться</string>
     <string name="go_to_students">- перейти к ученикам</string>
-    <string name="enter_note">Введите комментарий/оценку к уроку</string>
+    <string name="enter_note">Введите комментарий/оценку к уроку/домашнее задание</string>
     <string name="aStudent">Выберите ученика</string>
     <string name="select_student_and_group">Выберите группу и ученика</string>
     <string name="group_not_selected_for_student">Группа не определена</string>
+    <string name="no_lessons">Нет занятий</string>
+    <string name="no_comment">Нет комментариев, оценок, домашних заданий</string>
+    <string name="select_opponent">Выберите, с кем хотите начать чат</string>
+    <string name="enter_message">Введите сообщение</string>
+    <string name="aParentStudent">Выберите родителя ученика</string>
 </resources>

@@ -17,7 +17,7 @@ import com.example.rebenokumnyi.ui.theme.md_theme_light_primary
 import com.example.rebenokumnyi.ui.theme.md_theme_light_secondaryContainer
 
 @Composable
-fun UROutlineTextField(placeholder: String, value: String, isNumber:Boolean = false,modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
+fun UROutlineTextField(placeholder: String, value: String, isNumber:Boolean = false,modifier: Modifier = Modifier, isSingleLine: Boolean = true, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = value,
 
@@ -25,7 +25,7 @@ fun UROutlineTextField(placeholder: String, value: String, isNumber:Boolean = fa
         keyboardOptions = KeyboardOptions(
             keyboardType = if (isNumber) KeyboardType.Number else KeyboardType.Text
         ),
-        singleLine = true,
+        singleLine = isSingleLine,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = md_theme_light_secondaryContainer,
             unfocusedContainerColor = md_theme_light_secondaryContainer,

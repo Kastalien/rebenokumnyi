@@ -113,6 +113,7 @@ fun TeacherJournalScreen(JournalViewModel: JournalViewModel = viewModel()) {
                     JournalList(JournalViewModel.visibleSchedule,
                         JournalViewModel.isLoading,
                         JournalViewModel.selectedStudent.id == "",
+                        true,
                         { journalId, scheduleId: String, newNote: String ->
                             JournalViewModel.saveNote(journalId, scheduleId, newNote)
                         }) { JournalViewModel.loadJournal() }
@@ -166,6 +167,7 @@ fun JournalList(
     daySchedule: MutableList<Schedule>,
     isLoading: Boolean,
     isStudentSelected: Boolean,
+    showButton: Boolean,
     onNewNote: (String?, String, String) -> Unit,
     onUpdate: () -> Unit
 ) {
@@ -220,11 +222,14 @@ fun JournalList(
                                     var newNote by remember { mutableStateOf("${schedule.getNote() ?: ""}") }
                                     if (!isEdit) {
                                         Text(
-                                            text = "${schedule.getNote() ?: stringResource(id = R.string.enter_note)}",
+                                            text = "${schedule.getNote() ?: 
+                                                if (showButton) stringResource(id = R.string.enter_note) else stringResource(id = R.string.no_comment)}",
                                             style = appTypography.bodySmall
                                         )
-                                        URListButton(icon = ImageVector.vectorResource(R.drawable.edit)) {
-                                            isEdit = true
+                                        if (showButton) {
+                                            URListButton(icon = ImageVector.vectorResource(R.drawable.edit)) {
+                                                isEdit = true
+                                            }
                                         }
                                     } else {
                                         Box(

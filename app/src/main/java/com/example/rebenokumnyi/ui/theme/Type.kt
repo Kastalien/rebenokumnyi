@@ -13,8 +13,8 @@ val appTypography = Typography(
     titleSmall = TextStyle(
         fontFamily = FontFamily(Font(R.font.angeme)),
         fontWeight = FontWeight.Normal,
-        fontSize = 10.sp,
-        lineHeight = 10.sp,
+        fontSize = 12.sp,
+        lineHeight = 12.sp,
         letterSpacing = 0.sp
     ),
     bodySmall = TextStyle(
@@ -31,11 +31,11 @@ val appTypography = Typography(
         lineHeight = 8.sp,
         letterSpacing = 0.sp
     ),
-    bodyLarge = TextStyle(
+    bodyLarge = TextStyle( //OnContainer font
         fontFamily = FontFamily(Font(R.font.angeme)),
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 12.sp,
+        fontSize = 13.sp,
+        lineHeight = 13.sp,
         letterSpacing = 0.0.sp
     ),
     bodyMedium = TextStyle(
@@ -64,11 +64,11 @@ val appTypography = Typography(
         lineHeight = 12.sp,
         letterSpacing = 0.sp
     )
-    , labelLarge = TextStyle(
+    , labelLarge = TextStyle( //Buttons..
         fontFamily = FontFamily(Font(R.font.angeme)),
         fontWeight = FontWeight.Medium,
-        fontSize = 12.sp,
-        lineHeight = 12.sp,
+        fontSize = 13.sp,
+        lineHeight = 13.sp,
         letterSpacing = 0.sp
     )
 )

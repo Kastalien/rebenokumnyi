@@ -41,6 +41,6 @@ object AppData {
         } else ""
     }
     fun getRole():Roles{
-        return Roles.PARENTUSER
+        return currentRole.role
     }
 }

@@ -12,12 +12,14 @@ fun loadRole(onEndLoading: () -> Unit) {
                         currentRole.name = AppData.getUserName()
                         currentRole.save()
                     }
-                    loadGroups {
-                        loadStudents {
-                            if ((students.any { it.userId == AppData.getUserID() }) && (AppData.currentChild.id == ""))
-                                AppData.currentChild =
-                                    students.first { it.userId == AppData.getUserID() }
-                            onEndLoading()
+                    loadAllRoles {
+                        loadGroups {
+                            loadStudents {
+                                if ((students.any { it.userId == AppData.getUserID() }) && (AppData.currentChild.id == ""))
+                                    AppData.currentChild =
+                                        students.first { it.userId == AppData.getUserID() }
+                                onEndLoading()
+                            }
                         }
                     }
                 }.addOnFailureListener {
@@ -110,6 +112,22 @@ fun loadSelectedJournal(studentId: String, date:String, onEndLoading: () -> Unit
             onEndLoading()
         }.addOnFailureListener {
             selectedJournal = mutableListOf<Journal>()
+            onEndLoading()
+        }
+}
+
+fun loadSelectedChat(user1Id: String, user2Id: String, onEndLoading: () -> Unit) {
+    AppData
+        .database
+        .child("chat")
+        .orderByChild("user1Id")
+        .equalTo(user1Id)
+        .get()
+        .addOnSuccessListener { snapshot ->
+            selectedChat = snapshot.getValue<Map<String, Chat>>()?.map { it.value }?.toList()?.filter { it.user2Id==user2Id } ?: listOf()
+            onEndLoading()
+        }.addOnFailureListener {
+            selectedChat = mutableListOf<Chat>()
             onEndLoading()
         }
 }

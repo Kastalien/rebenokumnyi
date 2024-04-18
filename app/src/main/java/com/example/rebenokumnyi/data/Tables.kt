@@ -2,6 +2,9 @@ package com.example.rebenokumnyi.data
 
 import com.example.rebenokumnyi.R
 import com.google.firebase.database.Exclude
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.TimeZone
 
 enum class Roles(val role: Int) { UNKNOWN(0), ADMIN(1), TEACHER(2), PARENTUSER(3) }
 
@@ -12,6 +15,7 @@ var subjects: List<Subject> = listOf()
 var students: List<Student> = listOf()
 var roles: List<UserRole> = listOf()
 var selectedJournal: List<Journal> = listOf()
+var selectedChat: List<Chat> = listOf()
 var groupSchedule: List<Schedule> = listOf()
 var daysOfWeek = mapOf<Int, Int>(
     Pair(1, R.string.day_of_week_1),
@@ -161,6 +165,10 @@ data class Student(
         name = newName
         save()
     }
+    @Exclude
+    fun getParent(): UserRole? {
+        return roles.find { it.userId == userId }
+    }
 }
 
 data class Journal(
@@ -183,5 +191,34 @@ data class Journal(
     }
     fun remove() {
         AppData.database.child("schedule").child(id).removeValue()
+    }
+}
+
+data class Chat(
+    var id: String = "",
+    var dateTime: String = "",
+    var user1Id: String = "",
+    var user2Id: String = "",
+    var message: String = ""
+) {
+    @Exclude
+    fun getLocalTime():String{
+        val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+        df.timeZone = TimeZone.getTimeZone("UTC")
+        val date: Date = df.parse(dateTime)
+        df.timeZone = TimeZone.getDefault()
+        df.applyPattern("dd.MM.yyyy HH:mm")
+        return df.format(date)
+    }
+
+    fun save() {
+        AppData.database.child("chat").child(id).setValue(this)
+    }
+
+    fun addNewMessage() {
+        AppData.database.child("chat").push().key?.let {
+            id = it
+            save()
+        }
     }
 }
