@@ -63,4 +63,17 @@
     <string name="select_opponent">Выберите, с кем хотите начать чат</string>
     <string name="enter_message">Введите сообщение</string>
     <string name="aParentStudent">Выберите родителя ученика</string>
+    <string name="make_payment_by_qr">Отсканируйте Qr-код и внесите оплату</string>
+    <string name="ministry">Министерство образования и науки Республики Казахстан</string>
+    <string name="Univercity">Северо-Казахстанский университет им. М.Козыбаева</string>
+    <string name="faculty">Факультет инженерии и цифровых технологий</string>
+    <string name="department">Кафедра Информационно-коммуникационные технологии</string>
+    <string name="diploma">Дипломная работа</string>
+    <string name="mobile_application">Мобильное приложение</string>
+    <string name="author">Автор:</string>
+    <string name="educational_center">Детский центр \"Умный ребенок\"</string>
+    <string name="author_name">Жарқынбек Айдана Әмірсейіт Аружан Қалижанқызы</string>
+    <string name="author_group">Группа: ЕТжБҚ-20к</string>
+    <string name="native_city">Петропавловск, 2024</string>
+    <string name="speciality">6В06104 «Вычислительная техника и программное обеспечение»</string>
 </resources>

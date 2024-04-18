@@ -41,17 +41,25 @@ val appTypography = Typography(
     bodyMedium = TextStyle(
         fontFamily = FontFamily(Font(R.font.angeme)),
         fontWeight = FontWeight.Normal,
-        fontSize = 11.sp,
-        lineHeight = 11.sp,
+        fontSize = 12.sp,
+        lineHeight = 12.sp,
         letterSpacing = 0.0.sp
     ),
     titleLarge = TextStyle(
         fontFamily = FontFamily(Font(R.font.angeme)),
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 12.sp,
+        fontSize = 18.sp,
+        lineHeight = 18.sp,
         letterSpacing = 0.sp
-    ), labelSmall = TextStyle(
+    ),
+    titleMedium = TextStyle(
+        fontFamily = FontFamily(Font(R.font.angeme)),
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.sp
+    ),
+    labelSmall = TextStyle(
         fontFamily = FontFamily(Font(R.font.angeme)),
         fontWeight = FontWeight.Medium,
         fontSize = 10.sp,
