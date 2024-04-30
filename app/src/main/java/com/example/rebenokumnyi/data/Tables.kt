@@ -30,15 +30,20 @@ var daysOfWeek = mapOf<Int, Int>(
 
 interface InfoTable {
     fun setNewInfo(name: String, info: String)
+    fun addLink(it: String)
+
     var name: String
     var info: String
+    var userId: String
+    var imageLink: String
 }
 
 data class Group(
     var id: Int = -1,
     override var name: String = "",
-    var userId: String = "",
+    override var userId: String = "",
     override var info: String = "",
+    override var imageLink: String = ""
 ) : InfoTable {
     fun save() {
         AppData.database.child("groups").child(id.toString()).setValue(this)
@@ -48,6 +53,10 @@ data class Group(
         this.name=name
         this.info=info
         save()
+    }
+
+    override fun addLink(it: String) {
+        TODO("Not yet implemented")
     }
 
     fun setNewTeacher(newUserId: String) {
@@ -67,16 +76,23 @@ data class Group(
 }
 
 data class UserRole(
-    var userId: String = "",
+    override var userId: String = "",
     var role: Roles = Roles.UNKNOWN,
     override var name: String = "",
-    override var info: String = ""
+    override var info: String = "",
+    override var imageLink: String = ""
 ): InfoTable {
     override fun setNewInfo(name: String, info: String){
         this.name=name
         this.info=info
         save()
     }
+
+    override fun addLink(link: String) {
+        imageLink=link
+        save()
+    }
+
     fun save() {
         AppData.database.child("roles").child(userId).setValue(this)
     }

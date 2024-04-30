@@ -1,6 +1,8 @@
 package com.example.rebenokumnyi.adminscreens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,15 +35,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.rebenokumnyi.R
 import com.example.rebenokumnyi.components.URButton
 import com.example.rebenokumnyi.components.URListButton
 import com.example.rebenokumnyi.components.UROutlineTextField
+import com.example.rebenokumnyi.data.AppData
 import com.example.rebenokumnyi.data.InfoTable
 import com.example.rebenokumnyi.ui.theme.appTypography
 import com.example.rebenokumnyi.viewmodels.InfoViewModel
 
 enum class InfoMode { COMMON, TEACHERS, GROUPS }
+
+private fun launchCamera() {
+    Log.d("urlog", "launchCamera")
+
+    // Pick an image from storage
+    AppData.cameraIntent.launch(arrayOf("image/*"))
+}
 
 @Composable
 fun AdminInfoScreen(InfoViewModel: InfoViewModel = viewModel()) {
@@ -103,10 +115,10 @@ fun AdminInfoScreen(InfoViewModel: InfoViewModel = viewModel()) {
             }
         }
         else if (mode == InfoMode.GROUPS){
-            GroupInfoList(InfoViewModel.visibleGroups, stringResource(R.string.name), InfoViewModel.isLoading, {InfoViewModel.loadData()}, {mode=InfoMode.COMMON})
+            GroupInfoList(InfoViewModel.visibleGroups, stringResource(R.string.name), InfoViewModel.isLoading, false, {InfoViewModel.loadData()}, {mode=InfoMode.COMMON})
         }
         else if (mode == InfoMode.TEACHERS){
-            GroupInfoList(InfoViewModel.visibleTeachers, stringResource(R.string.fio), InfoViewModel.isLoading, {InfoViewModel.loadData()}, {mode=InfoMode.COMMON})
+            GroupInfoList(InfoViewModel.visibleTeachers, stringResource(R.string.fio), InfoViewModel.isLoading, true, {InfoViewModel.loadData()}, {mode=InfoMode.COMMON})
         }
     }
     DisposableEffect(Unit) {
@@ -117,7 +129,8 @@ fun AdminInfoScreen(InfoViewModel: InfoViewModel = viewModel()) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupInfoList(visibleList: List<InfoTable>, nameCaption:String, isLoading: Boolean, onUpdate: () -> Unit, back: () -> Unit) {
+fun GroupInfoList(visibleList: List<InfoTable>, nameCaption:String, isDataLoading: Boolean, isAddImage: Boolean, onUpdate: () -> Unit, back: () -> Unit) {
+    var isLoading by remember { mutableStateOf(isDataLoading) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,13 +149,13 @@ fun GroupInfoList(visibleList: List<InfoTable>, nameCaption:String, isLoading: B
                     var info by remember { mutableStateOf(infoTable.info) }
                     Row(
                         modifier = Modifier
-                            .height(200.dp)
+                            .height(if (isAddImage) 328.dp else 200.dp)
                             .padding(3.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(
                             modifier = Modifier
-                                .weight(0.9F)
+                                .weight(0.8F)
                                 .fillMaxHeight(),
                             verticalArrangement = Arrangement.Center
                         ) {
@@ -170,12 +183,38 @@ fun GroupInfoList(visibleList: List<InfoTable>, nameCaption:String, isLoading: B
                                 modifier = Modifier
                                     .height(120.dp)
                             )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            if (isAddImage) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    if (infoTable.imageLink!="") {
+                                        Image(
+                                            painter = rememberAsyncImagePainter(infoTable.imageLink),
+                                            contentDescription = null,
+                                            modifier = Modifier.height(128.dp)
+                                        )
+                                    }
+                                    URListButton(icon = ImageVector.vectorResource(R.drawable.upload)) {
+                                        AppData.onStartUpload= {isLoading = true}
+                                        AppData.onEndUpload= {
+                                            infoTable.addLink(it)
+                                            isLoading = false
+                                            onUpdate()
+                                        }
+                                        launchCamera()
+                                    }
+                                }
+                            }
                         }
                         URListButton(icon = ImageVector.vectorResource(R.drawable.save)) {
                             infoTable.setNewInfo(name, info)
                             onUpdate()
                         }
                     }
+                Divider(color = Color.Black, thickness = 2.dp)
                 Spacer(modifier = Modifier.height(5.dp))
             }
         }

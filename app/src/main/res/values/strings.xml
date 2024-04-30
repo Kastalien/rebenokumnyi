@@ -89,4 +89,7 @@
     <string name="info_title">Детский центр \"Умный ребенок\"</string>
     <string name="center_teachers">Преподаватели центра</string>
     <string name="center_groups">Направления центра</string>
+    <string name="progress_uploading">Изображение загружается</string>
+    <string name="upload_success">Изображение загружено</string>
+    <string name="upload_failure">Ошибка загрузки изображения</string>
 </resources>

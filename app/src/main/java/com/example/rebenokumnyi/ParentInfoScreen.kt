@@ -1,6 +1,7 @@
 package com.example.rebenokumnyi
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.example.rebenokumnyi.adminscreens.InfoMode
 import com.example.rebenokumnyi.components.URButton
 import com.example.rebenokumnyi.components.URListButton
@@ -79,10 +81,10 @@ fun ParentInfoScreen(InfoViewModel: InfoViewModel = viewModel()) {
             }
         }
         else if (mode == InfoMode.GROUPS){
-            GroupInfoListShow(InfoViewModel.visibleGroups, stringResource(R.string.name), InfoViewModel.isLoading, {mode=InfoMode.COMMON})
+            GroupInfoListShow(InfoViewModel.visibleGroups, stringResource(R.string.name), false, InfoViewModel.isLoading, {mode=InfoMode.COMMON})
         }
         else if (mode == InfoMode.TEACHERS){
-            GroupInfoListShow(InfoViewModel.visibleTeachers, stringResource(R.string.fio), InfoViewModel.isLoading, {mode=InfoMode.COMMON})
+            GroupInfoListShow(InfoViewModel.visibleTeachers, stringResource(R.string.fio), true, InfoViewModel.isLoading, {mode=InfoMode.COMMON})
         }
     }
     DisposableEffect(Unit) {
@@ -93,7 +95,7 @@ fun ParentInfoScreen(InfoViewModel: InfoViewModel = viewModel()) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupInfoListShow(visibleList: List<InfoTable>, nameCaption:String, isLoading: Boolean, back: () -> Unit) {
+fun GroupInfoListShow(visibleList: List<InfoTable>, nameCaption:String, isAddImage:Boolean, isLoading: Boolean, back: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,6 +125,21 @@ fun GroupInfoListShow(visibleList: List<InfoTable>, nameCaption:String, isLoadin
                             Text(text=name, style = appTypography.titleLarge)
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(info)
+                            if (isAddImage) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    if (infoTable.imageLink != "") {
+                                        Image(
+                                            painter = rememberAsyncImagePainter(infoTable.imageLink),
+                                            contentDescription = null,
+                                            modifier = Modifier.height(128.dp)
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                     Divider(color = Color.Black, thickness = 2.dp)
