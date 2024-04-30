@@ -76,4 +76,17 @@
     <string name="author_group">Группа: ЕТжБҚ-20к</string>
     <string name="native_city">Петропавловск, 2024</string>
     <string name="speciality">6В06104 «Вычислительная техника и программное обеспечение»</string>
+    <string name="input_teacher_information">Ввод информации о преподавателях</string>
+    <string name="input_group_information">Ввод информации о направлениях</string>
+    <string name="admin_info">Информация о центре</string>
+    <string name="save_changes">Сохранить изменения</string>
+    <string name="common_info">Общая информация о центре</string>
+    <string name="center_address">Адрес центра</string>
+    <string name="name">Название</string>
+    <string name="info">Описание</string>
+    <string name="fio">ФИО</string>
+    <string name="director">Директор:</string>
+    <string name="info_title">Детский центр \"Умный ребенок\"</string>
+    <string name="center_teachers">Преподаватели центра</string>
+    <string name="center_groups">Направления центра</string>
 </resources>

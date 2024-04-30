@@ -17,6 +17,7 @@ var roles: List<UserRole> = listOf()
 var selectedJournal: List<Journal> = listOf()
 var selectedChat: List<Chat> = listOf()
 var groupSchedule: List<Schedule> = listOf()
+var centerInfo: CenterInfo = CenterInfo()
 var daysOfWeek = mapOf<Int, Int>(
     Pair(1, R.string.day_of_week_1),
     Pair(2, R.string.day_of_week_2),
@@ -27,13 +28,26 @@ var daysOfWeek = mapOf<Int, Int>(
     Pair(7, R.string.day_of_week_7)
 )
 
+interface InfoTable {
+    fun setNewInfo(name: String, info: String)
+    var name: String
+    var info: String
+}
+
 data class Group(
     var id: Int = -1,
-    var name: String = "",
-    var userId: String = ""
-) {
+    override var name: String = "",
+    var userId: String = "",
+    override var info: String = "",
+) : InfoTable {
     fun save() {
         AppData.database.child("groups").child(id.toString()).setValue(this)
+    }
+
+    override fun setNewInfo(name: String, info: String){
+        this.name=name
+        this.info=info
+        save()
     }
 
     fun setNewTeacher(newUserId: String) {
@@ -55,9 +69,14 @@ data class Group(
 data class UserRole(
     var userId: String = "",
     var role: Roles = Roles.UNKNOWN,
-    var name: String = ""
-) {
-
+    override var name: String = "",
+    override var info: String = ""
+): InfoTable {
+    override fun setNewInfo(name: String, info: String){
+        this.name=name
+        this.info=info
+        save()
+    }
     fun save() {
         AppData.database.child("roles").child(userId).setValue(this)
     }
@@ -94,6 +113,7 @@ data class Schedule(
     fun getNote(): String? {
         return selectedJournal.find { it.scheduleId == id }?.note
     }
+
     @Exclude
     fun getNoteId(): String? {
         return selectedJournal.find { it.scheduleId == id }?.id
@@ -109,19 +129,20 @@ data class Schedule(
             save()
         }
     }
+
     fun remove() {
         AppData.database.child("schedule").child(id).removeValue()
     }
 }
 
 data class Subject(
-    var id: String = "",
-    var name: String = ""
+    var id: String = "", var name: String = ""
 ) {
     fun save() {
         AppData.database.child("subjects").child(id).setValue(this)
     }
-    fun setNewSubject(newSubjectName: String):Subject? {
+
+    fun setNewSubject(newSubjectName: String): Subject? {
         AppData.database.child("subjects").push().key?.let {
             id = it
             name = newSubjectName
@@ -133,10 +154,7 @@ data class Subject(
 }
 
 data class Student(
-    var id: String = "",
-    var groupId: Int = 0,
-    var userId: String = "",
-    var name: String = ""
+    var id: String = "", var groupId: Int = 0, var userId: String = "", var name: String = ""
 ) {
     @Exclude
     fun getGroup(): Group? {
@@ -153,10 +171,12 @@ data class Student(
             save()
         }
     }
+
     fun setNewGroup(newGroupId: Int) {
         groupId = newGroupId
         save()
     }
+
     fun remove() {
         AppData.database.child("students").child(id).removeValue()
     }
@@ -165,6 +185,7 @@ data class Student(
         name = newName
         save()
     }
+
     @Exclude
     fun getParent(): UserRole? {
         return roles.find { it.userId == userId }
@@ -189,6 +210,7 @@ data class Journal(
             save()
         }
     }
+
     fun remove() {
         AppData.database.child("schedule").child(id).removeValue()
     }
@@ -202,7 +224,7 @@ data class Chat(
     var message: String = ""
 ) {
     @Exclude
-    fun getLocalTime():String{
+    fun getLocalTime(): String {
         val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
         df.timeZone = TimeZone.getTimeZone("UTC")
         val date: Date = df.parse(dateTime)
@@ -221,4 +243,13 @@ data class Chat(
             save()
         }
     }
+}
+
+data class CenterInfo(
+    var about: String = "", var director: String = "", var place: String = ""
+) {
+    fun save() {
+        AppData.database.child("info").setValue(this)
+    }
+
 }

@@ -38,6 +38,12 @@ object ParentPaydata : URDestination {
     @StringRes override val title= R.string.pay_data
 }
 
+object ParentInfo : URDestination {
+    @DrawableRes override val icon = R.drawable.note
+    override val route = "parentinfo"
+    @StringRes override val title= R.string.admin_info
+}
+
 object AuthPage : URDestination {
     @DrawableRes override val icon = R.drawable.parents
     override val route = "authpage"
@@ -62,6 +68,11 @@ object AdminTeacher : URDestination {
     @StringRes override val title= R.string.admin_teacher
 }
 
+object AdminInfo : URDestination {
+    @DrawableRes override val icon = R.drawable.note
+    override val route = "admininfo"
+    @StringRes override val title= R.string.admin_info
+}
 object TeacherSchedule : URDestination {
     @DrawableRes override val icon = R.drawable.schedule
     override val route = "teacherschedule"
@@ -87,6 +98,6 @@ object AdminStudent : URDestination {
 }
 
 val parentTabRowScreens = listOf(AuthPage,ParentSchedule, ParentChat, ParentJournal, ParentPaydata, AboutPage)
-val notAuthTabRowScreens = listOf(AuthPage,AboutPage)
-val adminTabRowScreens = listOf(AuthPage,AdminGroup,AdminTeacher,AboutPage)
+val notAuthTabRowScreens = listOf(AuthPage, ParentInfo, AboutPage)
+val adminTabRowScreens = listOf(AuthPage,AdminGroup,AdminTeacher,AdminInfo,AboutPage)
 val teacherTabRowScreens = listOf(AuthPage, TeacherSchedule, TeacherJournal,TeacherChat, AboutPage)

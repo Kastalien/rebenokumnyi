@@ -20,7 +20,6 @@ import com.example.rebenokumnyi.ui.theme.md_theme_light_secondaryContainer
 fun UROutlineTextField(placeholder: String, value: String, isNumber:Boolean = false,modifier: Modifier = Modifier, isSingleLine: Boolean = true, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = value,
-
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(
             keyboardType = if (isNumber) KeyboardType.Number else KeyboardType.Text

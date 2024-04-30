@@ -2,40 +2,48 @@ package com.example.rebenokumnyi.data
 
 import com.google.firebase.database.getValue
 
-fun loadRole(onEndLoading: () -> Unit) {
+fun loadInit(onEndLoading: () -> Unit) {
     if (AppData.isAuth()) {
-            AppData.database.child("roles").child(AppData.getUserID()).get()
-                .addOnSuccessListener { dataSnapshot ->
-                    currentRole = dataSnapshot.getValue<UserRole>() ?: UserRole()
-                    if (currentRole.role == Roles.UNKNOWN) {
-                        currentRole.userId = AppData.getUserID()
-                        currentRole.name = AppData.getUserName()
-                        currentRole.save()
-                    }
-                    loadAllRoles {
+        AppData.database.child("roles").child(AppData.getUserID()).get()
+            .addOnSuccessListener { dataSnapshot ->
+                currentRole = dataSnapshot.getValue<UserRole>() ?: UserRole()
+                if (currentRole.role == Roles.UNKNOWN) {
+                    currentRole.userId = AppData.getUserID()
+                    currentRole.name = AppData.getUserName()
+                    currentRole.save()
+                }
+                loadAllRoles {
+                    loadInfo {
                         loadGroups {
                             loadStudents {
-                                if ((students.any { it.userId == AppData.getUserID() }) && (AppData.currentChild.id == ""))
-                                    AppData.currentChild =
-                                        students.first { it.userId == AppData.getUserID() }
+                                if ((students.any { it.userId == AppData.getUserID() }) && (AppData.currentChild.id == "")) AppData.currentChild =
+                                    students.first { it.userId == AppData.getUserID() }
                                 onEndLoading()
                             }
                         }
                     }
-                }.addOnFailureListener {
-                    currentRole = EmptyRole
-                    onEndLoading()
                 }
-    } else
-        onEndLoading()
+            }.addOnFailureListener {
+                currentRole = EmptyRole
+                onEndLoading()
+            }
+    } else onEndLoading()
+}
+
+fun loadInfo(onEndLoading: () -> Unit) {
+    AppData.database.child("info").get().addOnSuccessListener {
+            centerInfo = it.getValue<CenterInfo>() ?: CenterInfo()
+            onEndLoading()
+        }.addOnFailureListener {
+            centerInfo = CenterInfo()
+            onEndLoading()
+        }
 }
 
 fun loadGroups(onEndLoading: () -> Unit) {
-    if (isLocalData)
-        groups = debugGroups.toMutableList()
+    if (isLocalData) groups = debugGroups.toMutableList()
     else {
-        AppData.database.child("groups").get()
-            .addOnSuccessListener {
+        AppData.database.child("groups").get().addOnSuccessListener {
                 groups = it.getValue<ArrayList<Group>>()?.filterNotNull()?.toList() ?: listOf()
                 onEndLoading()
             }.addOnFailureListener {
@@ -45,10 +53,11 @@ fun loadGroups(onEndLoading: () -> Unit) {
     }
 }
 
-fun loadSchedule(groupId:Int,onEndLoading: () -> Unit) {
+fun loadSchedule(groupId: Int, onEndLoading: () -> Unit) {
     AppData.database.child("schedule").orderByChild("groupId").equalTo(groupId.toDouble()).get()
         .addOnSuccessListener { snapshot ->
-            groupSchedule = snapshot.getValue<Map<String, Schedule>>()?.map { it.value }?.toList() ?: listOf()
+            groupSchedule =
+                snapshot.getValue<Map<String, Schedule>>()?.map { it.value }?.toList() ?: listOf()
             onEndLoading()
         }.addOnFailureListener {
             groupSchedule = mutableListOf<Schedule>()
@@ -57,9 +66,9 @@ fun loadSchedule(groupId:Int,onEndLoading: () -> Unit) {
 }
 
 fun loadSubjects(onEndLoading: () -> Unit) {
-    AppData.database.child("subjects").get()
-        .addOnSuccessListener { snapshot ->
-            subjects = snapshot.getValue<Map<String, Subject>>()?.map { it.value }?.toList() ?: listOf()
+    AppData.database.child("subjects").get().addOnSuccessListener { snapshot ->
+            subjects =
+                snapshot.getValue<Map<String, Subject>>()?.map { it.value }?.toList() ?: listOf()
             onEndLoading()
         }.addOnFailureListener {
             subjects = mutableListOf<Subject>()
@@ -68,9 +77,9 @@ fun loadSubjects(onEndLoading: () -> Unit) {
 }
 
 fun loadAllRoles(onEndLoading: () -> Unit) {
-    AppData.database.child("roles").get()
-        .addOnSuccessListener { snapshot ->
-            roles = snapshot.getValue<Map<String, UserRole>>()?.map { it.value }?.toList() ?: listOf()
+    AppData.database.child("roles").get().addOnSuccessListener { snapshot ->
+            roles =
+                snapshot.getValue<Map<String, UserRole>>()?.map { it.value }?.toList() ?: listOf()
             onEndLoading()
         }.addOnFailureListener {
             roles = listOf<UserRole>()
@@ -79,9 +88,9 @@ fun loadAllRoles(onEndLoading: () -> Unit) {
 }
 
 fun loadStudents(onEndLoading: () -> Unit) {
-    AppData.database.child("students").get()
-        .addOnSuccessListener { snapshot ->
-            students = snapshot.getValue<Map<String, Student>>()?.map { it.value }?.toList() ?: listOf()
+    AppData.database.child("students").get().addOnSuccessListener { snapshot ->
+            students =
+                snapshot.getValue<Map<String, Student>>()?.map { it.value }?.toList() ?: listOf()
             onEndLoading()
         }.addOnFailureListener {
             students = mutableListOf<Student>()
@@ -89,10 +98,11 @@ fun loadStudents(onEndLoading: () -> Unit) {
         }
 }
 
-fun loadStudents(groupId: Int,onEndLoading: () -> Unit) {
+fun loadStudents(groupId: Int, onEndLoading: () -> Unit) {
     AppData.database.child("students").orderByChild("groupId").equalTo(groupId.toDouble()).get()
         .addOnSuccessListener { snapshot ->
-            students = snapshot.getValue<Map<String, Student>>()?.map { it.value }?.toList() ?: listOf()
+            students =
+                snapshot.getValue<Map<String, Student>>()?.map { it.value }?.toList() ?: listOf()
             onEndLoading()
         }.addOnFailureListener {
             students = mutableListOf<Student>()
@@ -100,15 +110,11 @@ fun loadStudents(groupId: Int,onEndLoading: () -> Unit) {
         }
 }
 
-fun loadSelectedJournal(studentId: String, date:String, onEndLoading: () -> Unit) {
-    AppData
-        .database
-        .child("journal")
-        .orderByChild("date")
-        .equalTo(date)
-        .get()
+fun loadSelectedJournal(studentId: String, date: String, onEndLoading: () -> Unit) {
+    AppData.database.child("journal").orderByChild("date").equalTo(date).get()
         .addOnSuccessListener { snapshot ->
-            selectedJournal = snapshot.getValue<Map<String, Journal>>()?.map { it.value }?.toList()?.filter { it.studentId==studentId } ?: listOf()
+            selectedJournal = snapshot.getValue<Map<String, Journal>>()?.map { it.value }?.toList()
+                ?.filter { it.studentId == studentId } ?: listOf()
             onEndLoading()
         }.addOnFailureListener {
             selectedJournal = mutableListOf<Journal>()
@@ -117,14 +123,10 @@ fun loadSelectedJournal(studentId: String, date:String, onEndLoading: () -> Unit
 }
 
 fun loadSelectedChat(user1Id: String, user2Id: String, onEndLoading: () -> Unit) {
-    AppData
-        .database
-        .child("chat")
-        .orderByChild("user1Id")
-        .equalTo(user1Id)
-        .get()
+    AppData.database.child("chat").orderByChild("user1Id").equalTo(user1Id).get()
         .addOnSuccessListener { snapshot ->
-            selectedChat = snapshot.getValue<Map<String, Chat>>()?.map { it.value }?.toList()?.filter { it.user2Id==user2Id } ?: listOf()
+            selectedChat = snapshot.getValue<Map<String, Chat>>()?.map { it.value }?.toList()
+                ?.filter { it.user2Id == user2Id } ?: listOf()
             onEndLoading()
         }.addOnFailureListener {
             selectedChat = mutableListOf<Chat>()

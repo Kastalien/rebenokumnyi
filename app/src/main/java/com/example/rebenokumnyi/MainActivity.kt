@@ -32,17 +32,20 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.compose.RebenokumnyiTheme
 import com.example.rebenokumnyi.adminscreens.AdminGroupScreen
+import com.example.rebenokumnyi.adminscreens.AdminInfoScreen
 import com.example.rebenokumnyi.adminscreens.AdminStudentScreen
 import com.example.rebenokumnyi.adminscreens.AdminTeacherScreen
 import com.example.rebenokumnyi.components.URTabRow
 import com.example.rebenokumnyi.data.AboutPage
 import com.example.rebenokumnyi.data.AdminGroup
+import com.example.rebenokumnyi.data.AdminInfo
 import com.example.rebenokumnyi.data.AdminStudent
 import com.example.rebenokumnyi.data.AdminTeacher
 import com.example.rebenokumnyi.data.AppData
 import com.example.rebenokumnyi.data.AppData.isAuth
 import com.example.rebenokumnyi.data.AuthPage
 import com.example.rebenokumnyi.data.ParentChat
+import com.example.rebenokumnyi.data.ParentInfo
 import com.example.rebenokumnyi.data.ParentJournal
 import com.example.rebenokumnyi.data.ParentPaydata
 import com.example.rebenokumnyi.data.ParentSchedule
@@ -52,10 +55,9 @@ import com.example.rebenokumnyi.data.TeacherJournal
 import com.example.rebenokumnyi.data.TeacherSchedule
 import com.example.rebenokumnyi.data.adminTabRowScreens
 import com.example.rebenokumnyi.data.currentRole
-import com.example.rebenokumnyi.data.loadRole
+import com.example.rebenokumnyi.data.loadInit
 import com.example.rebenokumnyi.data.notAuthTabRowScreens
 import com.example.rebenokumnyi.data.parentTabRowScreens
-import com.example.rebenokumnyi.data.students
 import com.example.rebenokumnyi.data.teacherTabRowScreens
 import com.example.rebenokumnyi.parentscreens.ParentChatScreen
 import com.example.rebenokumnyi.parentscreens.ParentJournalScreen
@@ -70,7 +72,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class MainActivity : ComponentActivity() {
 
@@ -121,7 +122,7 @@ fun InitialLoading() {
         }
     }
     DisposableEffect(Unit) {
-        loadRole({ isLoaded = true })
+        loadInit({ isLoaded = true })
         onDispose {}
     }
 }
@@ -197,13 +198,19 @@ fun MainApp(
                 composable(route = AdminGroup.route) {
                     AdminGroupScreen()
                 }
+                composable(route = AdminInfo.route) {
+                    AdminInfoScreen()
+                }
+                composable(route = ParentInfo.route) {
+                    ParentInfoScreen()
+                }
                 composable(route = AuthPage.route) {
                     AuthScreen {
                         if (isAuth()) {
                             GlobalScope.launch {
                                 if (Firebase.auth.currentUser?.displayName==null)
                                     Firebase.auth.currentUser?.reload()
-                                loadRole {
+                                loadInit {
                                     currentRoleScreen = currentRole.role
                                     it()
                                 }
