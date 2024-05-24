@@ -43,6 +43,7 @@ import com.example.rebenokumnyi.components.UROutlineTextField
 import com.example.rebenokumnyi.data.AppData
 import com.example.rebenokumnyi.data.InfoTable
 import com.example.rebenokumnyi.ui.theme.appTypography
+import com.example.rebenokumnyi.ui.theme.md_theme_light_primary
 import com.example.rebenokumnyi.viewmodels.InfoViewModel
 
 enum class InfoMode { COMMON, TEACHERS, GROUPS }
@@ -63,7 +64,7 @@ fun AdminInfoScreen(InfoViewModel: InfoViewModel = viewModel()) {
         horizontalAlignment = Alignment.Start
     ) {
         if (mode == InfoMode.COMMON) {
-            Text(stringResource(R.string.director))
+            Text(stringResource(R.string.director), color = md_theme_light_primary)
             UROutlineTextField(
                 placeholder = InfoViewModel.infoDirector,
                 value = InfoViewModel.infoDirector,
@@ -73,7 +74,7 @@ fun AdminInfoScreen(InfoViewModel: InfoViewModel = viewModel()) {
                     .height(60.dp)
             )
             Spacer(modifier = Modifier.height(20.dp))
-            Text(stringResource(R.string.common_info))
+            Text(stringResource(R.string.common_info), color = md_theme_light_primary)
             UROutlineTextField(
                 placeholder = InfoViewModel.infoAbout,
                 value = InfoViewModel.infoAbout,
@@ -83,7 +84,7 @@ fun AdminInfoScreen(InfoViewModel: InfoViewModel = viewModel()) {
                     .height(270.dp)
             )
             Spacer(modifier = Modifier.height(20.dp))
-            Text(stringResource(R.string.center_address))
+            Text(stringResource(R.string.center_address), color = md_theme_light_primary)
             UROutlineTextField(
                 placeholder = InfoViewModel.infoPlace,
                 value = InfoViewModel.infoPlace,

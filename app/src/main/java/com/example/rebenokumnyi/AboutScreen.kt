@@ -16,6 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.rebenokumnyi.ui.theme.appTypography
+import com.example.rebenokumnyi.ui.theme.md_theme_light_primary
+import com.example.rebenokumnyi.ui.theme.md_theme_light_primaryContainer
 
 @Composable
 fun AboutScreen(
@@ -40,7 +42,8 @@ fun AboutScreen(
             Text(stringResource(R.string.faculty), style = appTypography.bodyMedium)
             Text(stringResource(R.string.department), style = appTypography.bodyMedium)
             Spacer(modifier = Modifier.height(15.dp))
-            Text(stringResource(R.string.speciality), style = appTypography.bodyMedium)
+            Text(stringResource(R.string.speciality_code))
+            Text(stringResource(R.string.speciality))
         }
         Column(
             modifier = Modifier
@@ -50,7 +53,7 @@ fun AboutScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-            Text(stringResource(R.string.diploma), style = appTypography.titleLarge)
+            Text(stringResource(R.string.diploma), style = appTypography.titleLarge, color = md_theme_light_primary)
             Spacer(modifier = Modifier.height(10.dp))
             Image(
                 painter = painterResource(id = R.drawable.logo),
@@ -60,11 +63,11 @@ fun AboutScreen(
                     .padding(2.dp)
             )
             Spacer(modifier = Modifier.height(10.dp))
-            Text(stringResource(R.string.mobile_application), style = appTypography.titleLarge)
-            Text(stringResource(R.string.educational_center), style = appTypography.titleLarge)
+            Text(stringResource(R.string.mobile_application), style = appTypography.titleLarge, color = md_theme_light_primary)
+            Text(stringResource(R.string.educational_center), style = appTypography.titleLarge, color = md_theme_light_primary)
             Spacer(modifier = Modifier.height(10.dp))
             Text(stringResource(R.string.author), style = appTypography.titleMedium)
-            Text(stringResource(R.string.author_name), style = appTypography.titleMedium)
+            Text(stringResource(R.string.author_name))
             Text(stringResource(R.string.author_group))
             Spacer(modifier = Modifier.height(10.dp))
         }

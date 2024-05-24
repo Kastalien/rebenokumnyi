@@ -44,7 +44,9 @@ import com.example.rebenokumnyi.data.Roles
 import com.example.rebenokumnyi.data.groups
 import com.example.rebenokumnyi.data.roles
 import com.example.rebenokumnyi.ui.theme.appTypography
+import com.example.rebenokumnyi.ui.theme.md_theme_light_primaryContainer
 import com.example.rebenokumnyi.ui.theme.md_theme_light_secondaryContainer
+import com.example.rebenokumnyi.ui.theme.md_theme_light_shadow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,7 +95,11 @@ fun AdminGroupScreen(GroupViewModel: GroupViewModel = viewModel()) {
                     value = newGroupName,
                     onValueChange = { newGroupName = it },
                     label = { Text(stringResource(R.string.enter_new_group_name)) },
-                    colors=TextFieldDefaults.textFieldColors(containerColor = md_theme_light_secondaryContainer),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = md_theme_light_primaryContainer,
+                        unfocusedContainerColor = md_theme_light_primaryContainer,
+                        disabledContainerColor = md_theme_light_shadow,
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(80.dp)
@@ -159,6 +165,11 @@ fun GroupList(visibleGroups: MutableList<Group>, isLoading: Boolean, onUpdate: (
                                         value = groupName,
                                         onValueChange = { groupName = it },
                                         label = { Text(stringResource(R.string.enter_new_group_name)) },
+                                        colors = TextFieldDefaults.colors(
+                                            focusedContainerColor = md_theme_light_primaryContainer,
+                                            unfocusedContainerColor = md_theme_light_primaryContainer,
+                                            disabledContainerColor = md_theme_light_primaryContainer,
+                                        ),
                                         modifier = Modifier.fillMaxSize()
                                     )
                                 } else {

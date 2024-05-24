@@ -10,6 +10,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.rebenokumnyi.ui.theme.md_theme_light_onPrimary
 import com.example.rebenokumnyi.ui.theme.md_theme_light_primary
 import com.example.rebenokumnyi.ui.theme.md_theme_light_tertiaryContainer
 
@@ -20,7 +21,7 @@ fun URInputButton(text: String, modifier:Modifier=Modifier, onClick: () -> Unit)
         modifier = modifier,
         shape = RoundedCornerShape(20),
         border = BorderStroke(1.dp, md_theme_light_primary),
-        colors = ButtonDefaults.outlinedButtonColors(containerColor = md_theme_light_tertiaryContainer)
+        colors = ButtonDefaults.outlinedButtonColors(containerColor = md_theme_light_primary, contentColor = md_theme_light_onPrimary )
     ) {
         Text(text)
     }

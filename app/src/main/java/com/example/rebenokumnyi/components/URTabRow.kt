@@ -78,7 +78,7 @@ fun URTabRow(
             }
             Text(
                 stringResource(id = currentScreen.title).uppercase(Locale.getDefault()),
-                color = MaterialTheme.colorScheme.surfaceTint,
+                color = MaterialTheme.colorScheme.onPrimary,
                 style = appTypography.labelMedium
             )
         }

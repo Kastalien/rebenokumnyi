@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,6 +56,8 @@ import com.example.rebenokumnyi.data.Schedule
 import com.example.rebenokumnyi.data.daysOfWeek
 import com.example.rebenokumnyi.data.subjects
 import com.example.rebenokumnyi.ui.theme.appTypography
+import com.example.rebenokumnyi.ui.theme.md_theme_light_onPrimary
+import com.example.rebenokumnyi.ui.theme.md_theme_light_primary
 import com.example.rebenokumnyi.viewmodels.ScheduleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,11 +106,15 @@ fun TeacherScheduleScreen(ScheduleViewModel: ScheduleViewModel = viewModel()) {
                             timePickerState.hour.toString().padStart(2, '0')
                         }:${timePickerState.minute.toString().padStart(2, '0')}"
                         isPickTime = false
-                    }) { Text(stringResource(id = R.string.select_time)) }
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(containerColor = md_theme_light_primary, contentColor = md_theme_light_onPrimary )
+                    ) { Text(stringResource(id = R.string.select_time)) }
                 }, dismissButton = {
                     TextButton(onClick = {
                         isPickTime = false
-                    }) { Text(stringResource(id = R.string.cancel_time)) }
+                    },
+                        colors = ButtonDefaults.outlinedButtonColors(containerColor = md_theme_light_primary, contentColor = md_theme_light_onPrimary )
+                    ) { Text(stringResource(id = R.string.cancel_time)) }
                 }) {
                     TimePicker(state = timePickerState)
                 }
@@ -167,7 +174,7 @@ fun TeacherScheduleScreen(ScheduleViewModel: ScheduleViewModel = viewModel()) {
                         URInputButton(
                             text = newScheduleTime, modifier = Modifier
                                 .height(45.dp)
-                                .width(60.dp)
+                                .width(70.dp)
                         ) {
                             isPickTime = true
                         }

@@ -14,6 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import com.example.rebenokumnyi.ui.theme.md_theme_light_primary
+import com.example.rebenokumnyi.ui.theme.md_theme_light_primaryContainer
 import com.example.rebenokumnyi.ui.theme.md_theme_light_secondaryContainer
 
 @Composable
@@ -26,9 +27,9 @@ fun UROutlineTextField(placeholder: String, value: String, isNumber:Boolean = fa
         ),
         singleLine = isSingleLine,
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = md_theme_light_secondaryContainer,
-            unfocusedContainerColor = md_theme_light_secondaryContainer,
-            disabledContainerColor = md_theme_light_secondaryContainer,
+            focusedContainerColor = md_theme_light_primaryContainer,
+            unfocusedContainerColor = md_theme_light_primaryContainer,
+            disabledContainerColor = md_theme_light_primaryContainer,
         ),
         modifier = modifier
             .fillMaxWidth()
